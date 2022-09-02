@@ -120,7 +120,7 @@ export default {
     }
   },
   created() {
-//this.load()
+this.load()
   },
   methods:{
     handleEdit(){
@@ -143,14 +143,14 @@ export default {
       //request.post("接口的路径",传的参数)   //then是多余的。用来给后台看返回信息的
     },
     load(){
-      // request.get("/admin/queryPage",{params: {
-      //     currentPage: 1,
-      //     pageSize: 10,
-      //     username: this.username,
-      //     nickname: this.nickname
-      //   }}).then(res => {
-      //   console.log(res)
-      // })
+      request.get("/user/findPage",{params: {
+          currentPage: 1,
+          pageSize: 10,
+          search:this.search
+        }}).then(res => {
+        console.log(res)
+        this.tableData=res.data.records
+      })
     }
   }
 
