@@ -8,8 +8,8 @@
     </div>
     <!--    查找区域-->
     <div>
-      <el-input v-model="search" placeholder="Please input" style="width: 30%"/>
-      <el-button type="primary" style="margin-left: 5px">查询</el-button>
+      <el-input v-model="search" placeholder="Please input" style="width: 30%" clearable/>
+      <el-button type="primary" style="margin-left: 5px " @click="load">查询</el-button>
     </div>
     <div style="margin: 10px 0">
       <el-table :data="tableData" border stripe style="width: 100%"><!-- tableData是外来变量-->
@@ -21,15 +21,14 @@
         <el-table-column prop="address" label="地址" />
         <el-table-column label="Operations">
           <template #default="scope">
-            <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
+            <el-button size="small" @click="handleEdit(scope.row)"
             >编辑</el-button
             >
-            <el-popconfirm title="是否确定删除?">
+            <el-popconfirm title="是否确定删除?" @confirm="handleDelete(scope.row.id)"><!--气泡绑定按钮的事件用@confirm-->
               <template #reference>
                 <el-button
                     size="small"
                     type="danger"
-                    @click="handleDelete(scope.$index, scope.row)"
                 >删除</el-button
                 >
               </template>
@@ -123,35 +122,72 @@ export default {
 this.load()
   },
   methods:{
-    handleEdit(){
-
+    handleEdit(row){
+     this.form=JSON.parse(JSON.stringify(row))//对数据进行深拷贝与其他form对象隔开
+      this.dialogVisible=true//打开弹窗
     },
-    handleSizeChange(){
-
+    handleSizeChange(pageSize){//改变当前每页的个数触发
+      this.pageSize=pageSize
+      this.load()
     },
-    handleCurrentChange(){
-
+    handleCurrentChange(pageNum){//改变当前页码触发
+      this.currentPage=pageNum
+      this.load()
     },
     add(){
       this.dialogVisible=true;
       this.form={}//清空之前的记录
     },//this.dialogVisible=true是add函数触发时，改变变量
     save(){
-      request.post("/user/save",this.form).then(res => {console.log(res)})
+      if (this.form.id){//更新
+        request.put("/user/updata",this.form).then(res => {console.log(res)
+          if (res.code==='0') {//res.code是放回结果的一些性质,0就是成功
+            this.$message({type:"success",message:"更新成功"})//this.$message是自带的弹窗
+          }
+          else {
+            this.$message({type:"error",message:res.msg})
+          }
+        })
+      }
+      else {//新增
+        request.post("/user/save",this.form).then(res => {console.log(res)
+          if (res.code === '0') {//res.code是放回结果的一些性质,0就是成功
+            this.$message({type:"success",message:"新增成功"})//this.$message是自带的弹窗
+          }
+          else {
+            this.$message({type:"error",message:res.msg})
+          }
+        })
 
-      //request是需要import引入的(写完时用Alt+Shift+Enter快捷引入)
-      //request.post("接口的路径",传的参数)   //then是多余的。用来给后台看返回信息的
+        //request是需要import引入的(写完时用Alt+Shift+Enter快捷引入)
+        //request.post("接口的路径",传的参数)   //then是多余的。用来给后台看返回信息的
+      }
+      this.load()
     },
     load(){
       request.get("/user/findPage",{params: {
-          currentPage: 1,
-          pageSize: 10,
+          currentPage: this.currentPage,
+          pageSize: this.pageSize,
           search:this.search
         }}).then(res => {
         console.log(res)
         this.tableData=res.data.records
+        this.total=res.data.total
       })
+    },
+    handleDelete(id){
+      console.log(id)
+      request.delete("/user/delUser/"+id).then(res=>{
+        if (res.code === '0') {//res.code是放回结果的一些性质,0就是成功
+          this.$message({type:"success",message:"删除成功"})//this.$message是自带的弹窗
+        }
+        else {
+          this.$message({type:"error",message:res.msg})
+        }
+      })
+      this.load()
     }
+
   }
 
 }

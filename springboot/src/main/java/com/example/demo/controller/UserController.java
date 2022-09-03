@@ -29,6 +29,19 @@ public class UserController {
         userMapper.insert(user);
         return Result.success();//放回信息
     }
+
+    @PutMapping(value="/updata")//定义post的接口
+    public Result<?> updata(@RequestBody User user){//RequestBody 可以将前台传来的json转化为User对象
+        //Result<?>的问号表示所以类型的数据都可以接受
+        userMapper.updateById(user);
+        return Result.success();//放回信息
+    }
+    @DeleteMapping(value="/delUser/{id}")///delUser/{id}/{aa}可以同时传入两个数据
+    public Result<?> delUser(@PathVariable Long id){//@PathVariable花括号中的字符串变为对象,搭配@DeleteMapping
+        //Result<?>的问号表示所以类型的数据都可以接受
+        userMapper.deleteById(id);
+        return Result.success();//放回信息
+    }
     @GetMapping(value = "/findPage")
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,@RequestParam(defaultValue = "10") Integer pageSize,@RequestParam(defaultValue = "") String search){
         //pageNum是当前页;pageSize是一页有多少条数据;search是查询的关键字(defaultValue是设置默认值)
