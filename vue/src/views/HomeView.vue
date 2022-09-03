@@ -122,7 +122,7 @@ export default {
 this.load()
   },
   methods:{
-    handleEdit(row){
+    handleEdit(row){//编辑数据
      this.form=JSON.parse(JSON.stringify(row))//对数据进行深拷贝与其他form对象隔开
       this.dialogVisible=true//打开弹窗
     },
