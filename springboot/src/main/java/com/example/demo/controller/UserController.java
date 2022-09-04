@@ -30,6 +30,16 @@ public class UserController {
         return Result.success();//放回信息
     }
 
+    @PostMapping(value="/login")//定义post的接口
+    public Result<?> login(@RequestBody User user){//RequestBody 可以将前台传来的json转化为User对象
+        //Result<?>的问号表示所以类型的数据都可以接受
+        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername,user.getUsername()).eq(User::getPassword,user.getPassword()));
+        if (res == null){
+            return Result.error("-1","用户名或密码错误");//错误信息的返回
+        }
+        return Result.success();//放回信息
+    }
+
     @PutMapping(value="/updata")//定义post的接口
     public Result<?> updata(@RequestBody User user){//RequestBody 可以将前台传来的json转化为User对象
         //Result<?>的问号表示所以类型的数据都可以接受

@@ -10,7 +10,7 @@
         <el-input  v-model="form.password"  show-password  :prefix-icon="Lock"/>
       </el-form-item>
       <el-form-item >
-       <el-button style="width: 100%;" type="primary">登 录</el-button>
+       <el-button style="width: 100%;" type="primary" @click="login">登 录</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -19,6 +19,7 @@
 
 <script>
 import { Avatar,Lock} from '@element-plus/icons-vue'
+import request from "@/utils/request";
 // 统一导入el-icon图标
 export default {
   name: "Login",
@@ -31,6 +32,19 @@ export default {
     return {
       Avatar,
       Lock
+    }
+  },
+  methods:{
+    login(){
+      request.post("/user/login",this.form).then(res=>{
+        if (res.code === '0') {//res.code是放回结果的一些性质,0就是成功
+          this.$message({type:"success",message:"登录成功"})//this.$message是
+          this.$router.push("/")//登录成功后进行页面跳转
+        }
+        else {
+          this.$message({type:"error",message:res.msg})
+        }
+      })
     }
   }
 
