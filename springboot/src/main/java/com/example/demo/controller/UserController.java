@@ -39,6 +39,19 @@ public class UserController {
         }
         return Result.success();//放回信息
     }
+    @PostMapping(value="/register")//定义post的接口
+    public Result<?> register(@RequestBody User user){//RequestBody 可以将前台传来的json转化为User对象
+        //Result<?>的问号表示所以类型的数据都可以接受
+        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername,user.getUsername()));
+        if (res != null){
+            return Result.error("-1","用户名重复");//错误信息的返回
+        }
+        if(user.getPassword()==null){
+            user.setPassword("123456");
+        }
+        userMapper.insert(user);
+        return Result.success();//放回信息
+    }
 
     @PutMapping(value="/updata")//定义post的接口
     public Result<?> updata(@RequestBody User user){//RequestBody 可以将前台传来的json转化为User对象
