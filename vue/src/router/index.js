@@ -6,13 +6,23 @@ const routes = [
     path: '/',
     name: 'Layout',
     component: Layout,
-    redirect:"/home",//重定向(当访问"/"时直接跳到"/home")
+    redirect:"/User",//重定向(当访问"/"时直接跳到"/home")
     children:[//children是嵌套路由
       {
-        path:'home',
-        name:'Home',
-        component:()=>import("@/views/HomeView")//路由的路径的写法二
-      }
+        path:'/User',
+        name:'User',
+        component:()=>import("@/views/User")//路由的路径的写法二
+      },
+      {
+        path: '/Person',
+        name: 'Person',
+        component: ()=>import("@/views/Person")
+      },
+      {
+        path: '/Book',
+        name: 'Book',
+        component: ()=>import("@/views/Book")
+      },
     ]
   },
   {

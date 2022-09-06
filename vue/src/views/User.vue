@@ -100,7 +100,7 @@
 import request from "@/utils/request";
 
 export default {
-  name: 'HomeView',
+  name: 'User',
   components: {
 
   },
