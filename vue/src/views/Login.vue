@@ -49,6 +49,7 @@ export default {
           request.post("/user/login",this.form).then(res=>{
             if (res.code === '0') {//res.code是放回结果的一些性质,0就是成功
               this.$message({type:"success",message:"登录成功"})//this.$message是
+              sessionStorage.setItem("user", JSON.stringify(res.data))  // 缓存用户信息
               this.$router.push("/")//登录成功后进行页面跳转
             }
             else {
