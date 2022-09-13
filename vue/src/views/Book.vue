@@ -18,6 +18,16 @@
         <el-table-column prop="price" label="价格" />
         <el-table-column prop="author" label="作者" />
         <el-table-column prop="createTime" label="出版日期" />
+        <el-table-column
+            label="封面">
+          <template #default="scope">
+            <el-image
+                style="width: 100px; height: 100px"
+                :src="scope.row.cover"
+                :preview-src-list="[scope.row.cover]">
+            </el-image>
+          </template>
+        </el-table-column>
         <el-table-column label="Operations">
           <template #default="scope">
             <el-button size="small" @click="handleEdit(scope.row)"

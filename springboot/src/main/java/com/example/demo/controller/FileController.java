@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
@@ -27,9 +28,14 @@ public class FileController {
     public Result<?> upload(MultipartFile file) throws IOException {
         String originalFilename=file.getOriginalFilename();//获取文件名
         String flag = IdUtil.fastSimpleUUID();// 定义文件的唯一标识（前缀）
-        String rootFilePath=System.getProperty("user.id")+"/springboot/src/main/resources/files"+flag + "_" +originalFilename;//获取files文件夹的绝对路径
+        String rootFilePath=System.getProperty("user.dir")+"/springboot/src/main/resources/files/"+flag + "_" +originalFilename;//获取files文件夹的绝对路径
+        File rootFile = new File(rootFilePath);
+        if (!rootFile.getParentFile().exists()) {
+            rootFile.getParentFile().mkdirs();
+        }
         FileUtil.writeBytes(file.getBytes(),rootFilePath);//写入到上传的路径
         return Result.success( ip + ":" + port + "/files/" + flag);  // 返回结果 url
+
     }
     @GetMapping("/getfile/{flag}")
     public void getFiles(@PathVariable String flag, HttpServletResponse response){//由于文件的下载是通过流的形式，不需要Result返回
