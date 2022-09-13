@@ -71,6 +71,11 @@
             <el-form-item label="出版日期">
               <el-input v-model="form.createTime" style="width: 80%"/>
             </el-form-item>
+            <el-form-item label="封面">
+              <el-upload action="http://localhost:9090/files/upload" :on-success="filesUploadSuccess">
+                <el-button type="primary">点击上传</el-button>
+              </el-upload>
+            </el-form-item>
           </el-form>
           <template #footer>
       <span class="dialog-footer">
@@ -180,7 +185,11 @@ export default {
         }
       })
       this.load()
-    }
+    },
+    filesUploadSuccess(res) {
+      console.log(res)
+      this.form.cover = res.data
+    },
 
   }
 
