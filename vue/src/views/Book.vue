@@ -82,7 +82,7 @@
               <el-input v-model="form.createTime" style="width: 80%"/>
             </el-form-item>
             <el-form-item label="封面">
-              <el-upload action="http://localhost:9090/files/upload" :on-success="filesUploadSuccess">
+              <el-upload ref="upload" action="http://localhost:9090/files/upload" :on-success="filesUploadSuccess">
                 <el-button type="primary">点击上传</el-button>
               </el-upload>
             </el-form-item>
@@ -146,6 +146,10 @@ export default {
     add(){
       this.dialogVisible=true;
       this.form={}//清空之前的记录
+      this.$nextTick(()=>{//$nextTick是来处理元素不存在的问题
+        this.$refs['upload'].clearFiles()//清除历史文件列表
+      })
+
     },//this.dialogVisible=true是add函数触发时，改变变量
     save(){
       if (this.form.id){//更新

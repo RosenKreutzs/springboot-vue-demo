@@ -37,7 +37,7 @@ public class FileController {
         return Result.success( ip + ":" + port + "/files/" + flag);  // 返回结果 url
 
     }
-    @GetMapping("/getfile/{flag}")
+    @GetMapping("/{flag}")
     public void getFiles(@PathVariable String flag, HttpServletResponse response){//由于文件的下载是通过流的形式，不需要Result返回
         OutputStream os;  // 新建一个输出流对象
         String basePath = System.getProperty("user.dir") + "/springboot/src/main/resources/files/";  // 定于文件上传的根路径
