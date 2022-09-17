@@ -28,7 +28,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="Operations">
+        <el-table-column label="操作">
           <template #default="scope">
             <el-button size="small" @click="handleEdit(scope.row)"
             >编辑</el-button

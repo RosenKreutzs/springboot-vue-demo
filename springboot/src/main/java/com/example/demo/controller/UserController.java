@@ -37,7 +37,7 @@ public class UserController {
         if (res == null){
             return Result.error("-1","用户名或密码错误");//错误信息的返回
         }
-        return Result.success();//放回信息
+        return Result.success(res);//放回信息
     }
     @PostMapping(value="/register")//定义post的接口
     public Result<?> register(@RequestBody User user){//RequestBody 可以将前台传来的json转化为User对象

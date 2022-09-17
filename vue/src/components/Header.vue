@@ -5,9 +5,9 @@
     <div style="width: 200px;padding-left: 30px;font-weight: bold;color:blue ;">后台管理</div>
     <div style="flex:1"></div>
     <div style="width: 100px">
+      {{nickName}}
       <el-dropdown>
     <span class="el-dropdown-link" style="padding-top:15px">
-      张三
       <el-icon class="el-icon--right">
         <arrow-down />
       </el-icon>
@@ -25,8 +25,19 @@
 </template>
 
 <script>
+let userStr=sessionStorage.getItem("user")||"{}"
+let user=JSON.parse(userStr)
 export default {
-  name: "Header"
+  name: "Header",
+  data() {
+    return {
+      nickName:""
+    }
+  },
+  created() {
+    console.log(user)
+    this.nickName=user.nickName
+  }
 }
 </script>
 

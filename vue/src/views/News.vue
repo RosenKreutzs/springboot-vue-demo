@@ -17,8 +17,11 @@
         <el-table-column prop="title" label="标题" width="180" />
         <el-table-column prop="author" label="作者" width="180" />
         <el-table-column prop="time" label="时间" width="180" />
-        <el-table-column label="Operations">
+        <el-table-column label="操作">
           <template #default="scope">
+            <el-button size="small" @click="detail(scope.row)"
+            >详情</el-button
+            >
             <el-button size="small" @click="handleEdit(scope.row)"
             >编辑</el-button
             >
@@ -73,6 +76,16 @@
           </template>
         </el-dialog>
 
+        <el-dialog
+            v-model="vis"
+            title="详情"
+            width="50%"
+        >
+          <el-card>
+            <div v-html="details.content" style="min-height: 100px"></div>
+          </el-card>
+        </el-dialog>
+
       </div>
 
     </div>
@@ -85,6 +98,7 @@
 import request from "@/utils/request";
 import E from "wangeditor";
 let editor;
+
 export default {
   name: 'News',
   components: {
@@ -98,10 +112,12 @@ export default {
       currentPage:1,
       total:0,
       pageSize:10,
-      CQS:'新增',
+      CQS:"新增",
       tableData:[
 
-      ]
+      ],
+      details:{},
+      vis:false
     }
   },
   created() {
@@ -110,9 +126,19 @@ export default {
   mounted() {//只有页面元素都执行后才会执行mounted的代码
   },
   methods:{
+    detail(row){
+      this.details=row
+      this.vis=true
+    },
     handleEdit(row){//编辑数据
       this.form=JSON.parse(JSON.stringify(row))//对数据进行深拷贝与其他form对象隔开
       this.dialogVisible=true//打开弹窗
+      this.$nextTick(()=>{//是否有异步元素的判断
+        // 关联弹窗里面的div，new一个 editor对象
+        editor =new E('#div1')
+        editor.create()
+        editor.txt.html(row.content)//存入row.content信息到editor
+      })
     },
     handleSizeChange(pageSize){//改变当前每页的个数触发
       this.pageSize=pageSize
@@ -128,12 +154,15 @@ export default {
       this.$nextTick(()=>{//是否有异步元素的判断
         // 关联弹窗里面的div，new一个 editor对象
         editor =new E('#div1')
+        // 配置 server 接口地址
+        editor.config.uploadImgServer = 'http://localhost:9090/files/editor/upload'
+        editor.config.uploadFileName = "file"  // 设置上传参数名称
         editor.create();
       })
 
     },//this.dialogVisible=true是add函数触发时，改变变量
     save(){
-      this.form.content=editor.txt.html()
+      this.form.content=editor.txt.html()//键文本编辑信息给content
       if (this.form.id){//更新
         request.put("/news/updata",this.form).then(res => {console.log(res)
           if (res.code==='0') {//res.code是放回结果的一些性质,0就是成功
@@ -145,6 +174,9 @@ export default {
         })
       }
       else {//新增
+        let userStr=sessionStorage.getItem("user")||"{}"
+        let user=JSON.parse(userStr)
+        this.form.author=user.nickName
         request.post("/news/save",this.form).then(res => {console.log(res)
           if (res.code === '0') {//res.code是放回结果的一些性质,0就是成功
             this.$message({type:"success",message:"新增成功"})//this.$message是自带的弹窗

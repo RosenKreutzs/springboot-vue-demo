@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.sql.Wrapper;
+import java.util.Date;
 
 //@RestController的意思是表示自己为返回json的控制器
 @RestController
@@ -21,6 +22,7 @@ public class NewsController {
     @PostMapping(value="/save")//定义post的接口
     public Result<?> save(@RequestBody News news){//RequestBody 可以将前台传来的json转化为User对象
         //Result<?>的问号表示所以类型的数据都可以接受
+        news.setTime(new Date());
         newsMapper.insert(news);
         return Result.success();//放回信息
     }

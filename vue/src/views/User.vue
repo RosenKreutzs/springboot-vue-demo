@@ -19,7 +19,7 @@
         <el-table-column prop="age" label="年龄" />
         <el-table-column prop="sex" label="性别" />
         <el-table-column prop="address" label="地址" />
-        <el-table-column label="Operations">
+        <el-table-column label="操作">
           <template #default="scope">
             <el-button size="small" @click="handleEdit(scope.row)"
             >编辑</el-button
