@@ -66,7 +66,9 @@ public class UserController {
         return Result.success();//放回信息
     }
     @GetMapping(value = "/findPage")
-    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,@RequestParam(defaultValue = "10") Integer pageSize,@RequestParam(defaultValue = "") String search){
+    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
+                              @RequestParam(defaultValue = "10") Integer pageSize,
+                              @RequestParam(defaultValue = "") String search){
         //pageNum是当前页;pageSize是一页有多少条数据;search是查询的关键字(defaultValue是设置默认值)
         LambdaQueryWrapper<User> wrapper=Wrappers.<User>lambdaQuery();//sql条件的执行对象
         if (StrUtil.isNotBlank(search)){//StrUtil.isNotBlank(search)是hutool依赖用来帮助判断参数是否为空的

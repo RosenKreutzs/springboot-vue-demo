@@ -136,8 +136,10 @@ export default {
       this.$nextTick(()=>{//是否有异步元素的判断
         // 关联弹窗里面的div，new一个 editor对象
         editor =new E('#div1')
-        editor.create()
-        editor.txt.html(row.content)//存入row.content信息到editor
+        // 配置 server 接口地址
+        editor.config.uploadImgServer = 'http://localhost:9090/files/editor/upload'//用来本地上传照片的
+        editor.config.uploadFileName = "file"  // 设置上传参数名称
+        editor.create();
       })
     },
     handleSizeChange(pageSize){//改变当前每页的个数触发
@@ -194,7 +196,7 @@ export default {
     },
     load(){
       request.get("/news/findPage",{params: {
-          currentPage: this.currentPage,
+          pageNum: this.currentPage,
           pageSize: this.pageSize,
           search:this.search
         }}).then(res => {

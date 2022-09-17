@@ -166,7 +166,7 @@ this.load()
     },
     load(){
       request.get("/user/findPage",{params: {
-          currentPage: this.currentPage,
+          pageNum: this.currentPage,
           pageSize: this.pageSize,
           search:this.search
         }}).then(res => {

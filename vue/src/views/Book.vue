@@ -179,7 +179,7 @@ export default {
     },
     load(){
       request.get("/book/findPage",{params: {
-          currentPage: this.currentPage,
+          pageNum: this.currentPage,
           pageSize: this.pageSize,
           search:this.search
         }}).then(res => {
