@@ -79,6 +79,11 @@ public class UserController {
         //new Page<>(pageNum,pageSize)//分页对象
         //Wrappers.<User>lambdaQuery().like(User::getNickName,search)//sql执行对象
         // User::getNickName是User.getNickName的变形
+
         return Result.success(userPage);//Result.success(变量名)//用返回变量
+    }
+    @GetMapping("/{id}")
+    public Result<?> getById(@PathVariable Long id) {
+        return Result.success(userMapper.selectById(id));
     }
 }

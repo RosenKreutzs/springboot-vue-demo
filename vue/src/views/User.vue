@@ -13,12 +13,18 @@
     </div>
     <div style="margin: 10px 0">
       <el-table :data="tableData" border stripe style="width: 100%"><!-- tableData是外来变量-->
-        <el-table-column prop="id" label="ID" width="180" sortable /><!--sortable是按data排序-->
+        <el-table-column prop="id" label="ID" width="80" sortable /><!--sortable是按data排序-->
         <el-table-column prop="username" label="用户名" width="180" /><!--prop是tableData对象的一个属性名；label是显示给页面的属性名 -->
         <el-table-column prop="nickName" label="昵称" /><!--后台的数据到前台来下划线都会变成驼峰-->
         <el-table-column prop="age" label="年龄" />
         <el-table-column prop="sex" label="性别" />
         <el-table-column prop="address" label="地址" />
+        <el-table-column  label="角色" >
+          <template #default="scope">
+            <span v-if="scope.row.role === 1 ">管理员</span>
+            <span v-if="scope.row.role === 2 ">普通用户</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
             <el-button size="small" @click="handleEdit(scope.row)"
