@@ -16,12 +16,14 @@
 <script>
 import Header from "@/components/Header";
 import Aside from "@/components/Aside";
+import Echart from "@/components/Echart";
 
 export default {
   name: "layout",
   components:{
     Header,/* Header是组件名，写了export default后，选中组件名按Alt+Enter生成 import Header from "@/components/Header";*/
-    Aside
+    Aside,
+    Echart
   }
 }
 </script>

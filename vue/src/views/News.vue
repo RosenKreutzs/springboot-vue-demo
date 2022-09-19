@@ -1,6 +1,6 @@
 、<template>
   <div style="padding: 10px;">
-    <!--    功能区域-->
+        <!--    功能区域-->
     <div style="margin: 10px 0">
       <el-button type="primary" @click="add">{{CQS}}</el-button><!--@click="add"表示点击这个按钮就触发add的函数-->
       <el-button type="primary">导入</el-button>
@@ -89,7 +89,7 @@
       </div>
 
     </div>
-
+    <Echart></Echart>
   </div>
 </template>
 
@@ -97,12 +97,14 @@
 
 import request from "@/utils/request";
 import E from "wangeditor";
+import Echart from "@/components/Echart";
+
 let editor;
 
 export default {
   name: 'News',
   components: {
-
+    Echart
   },
   data(){
     return{
@@ -222,7 +224,10 @@ export default {
       this.form.cover = res.data
     },
 
+
+
   }
 
 }
 </script>
+
