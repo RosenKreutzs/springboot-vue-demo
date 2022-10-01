@@ -1,29 +1,25 @@
 <template>
   <v-chart class="chart" :option="option" />
 </template>
-
 <script>
-import { use } from 'echarts/core';
-import { CanvasRenderer } from 'echarts/renderers';
-import { PieChart } from 'echarts/charts';
-import {
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-} from 'echarts/components';
-import VChart, { THEME_KEY } from 'vue-echarts';
-import { ref, defineComponent } from 'vue';
 
-use([
-  CanvasRenderer,
-  PieChart,
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-]);
+import * as echarts from 'echarts/core';
+import { GridComponent } from 'echarts/components';
+import { BarChart } from 'echarts/charts';
+import { CanvasRenderer } from 'echarts/renderers';
+echarts.use([GridComponent, BarChart, CanvasRenderer]);
+
+import VChart, { THEME_KEY } from 'vue-echarts';
+import { ref, defineComponent,computed } from 'vue';
+
+let userStr=sessionStorage.getItem("users")||"{}"
+let user=JSON.parse(userStr)
 
 export default defineComponent({
   name: 'echart',
+  data(){
+    return{}
+  },
   components: {
     VChart,
   },
@@ -31,51 +27,30 @@ export default defineComponent({
     [THEME_KEY]: 'dark',
   },
   setup() {
+    const data=ref(user.records)
     const option = ref({
-      title: {
-        text: 'Traffic Sources',
-        left: 'center',
+      xAxis: {
+        type: 'category',
+        data: data.value.map(d => d.id)
       },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)',
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left',
-        data: ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines'],
+      yAxis: {
+        type: 'value'
       },
       series: [
         {
-          name: 'Traffic Sources',
-          type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
-          data: [
-            { value: 335, name: 'Direct' },
-            { value: 310, name: 'Email' },
-            { value: 234, name: 'Ad Networks' },
-            { value: 135, name: 'Video Ads' },
-            { value: 1548, name: 'Search Engines' },
-          ],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
-        },
-      ],
+          data: data.value.map(d => d.age),
+          type: 'bar'
+        }
+      ]
     });
-
     return { option };
   },
+
 });
 </script>
 
 <style scoped>
 .chart {
-  height: 20vh;
+  height: 50vh;
 }
 </style>

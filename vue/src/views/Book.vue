@@ -5,6 +5,14 @@
       <el-button type="primary" @click="add">{{CQS}}</el-button><!--@click="add"表示点击这个按钮就触发add的函数-->
       <el-button type="primary">导入</el-button>
       <el-button type="primary">导出</el-button>
+      <el-popconfirm
+          title="确定删除吗？"
+          @confirm="deleteBatch"
+      >
+        <template #reference>
+          <el-button type="danger" >批量删除</el-button>
+        </template>
+      </el-popconfirm>
     </div>
     <!--    查找区域-->
     <div>
@@ -12,7 +20,11 @@
       <el-button type="primary" style="margin-left: 5px " @click="load">查询</el-button>
     </div>
     <div style="margin: 10px 0">
-      <el-table :data="tableData" border stripe style="width: 100%">
+      <el-table :data="tableData" border stripe style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column><!--用于批量删除的-->
         <el-table-column prop="id" label="ID" width="180" sortable />
         <el-table-column prop="name" label="书名" width="180" />
         <el-table-column prop="price" label="价格" />
@@ -82,7 +94,7 @@
               <el-input v-model="form.createTime" style="width: 80%"/>
             </el-form-item>
             <el-form-item label="封面">
-              <el-upload ref="upload" action="http://localhost:9090/files/upload" :on-success="filesUploadSuccess">
+              <el-upload ref="upload" :action="filesUploadUrl" :on-success="filesUploadSuccess">
                 <el-button type="primary">点击上传</el-button>
               </el-upload>
             </el-form-item>
@@ -124,13 +136,32 @@ export default {
       CQS:'新增',
       tableData:[
 
-      ]
+      ],
+      filesUploadUrl: "http://" + window.server.filesUploadUrl + ":9090/files/upload",
+      ids:[]
     }
   },
   created() {
     this.load()
   },
   methods:{
+    handleSelectionChange(val) {
+      this.ids = val.map(v => v.id)   // [{id,name}, {id,name}] => [id,id]
+    },
+    deleteBatch() {
+      if (!this.ids.length) {
+        this.$message.warning("请选择数据！")
+        return
+      }
+      request.post("/book/deleteBatch", this.ids).then(res => {
+        if (res.code === '0') {
+          this.$message.success("批量删除成功")
+          this.load()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
     handleEdit(row){//编辑数据
       this.form=JSON.parse(JSON.stringify(row))//对数据进行深拷贝与其他form对象隔开
       this.dialogVisible=true//打开弹窗

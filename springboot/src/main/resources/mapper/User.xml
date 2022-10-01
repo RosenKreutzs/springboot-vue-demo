@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserMapper"><!--mapper这是连接对象的mapper-->
+
+        <resultMap id="userMap" type="com.example.demo.entity.User"><!--resultMap这是连接对象的-->
+        <result property="id" column="id"/><!--result实现User.java和mysql的表的意义对应-->
+        <result property="username" column="username"/><!--property是User.java的属性名-->
+        <result property="password" column="password"/><!--column是mysql表里的字段名-->
+        <result property="nickName" column="nick_name"/>
+        <result property="age" column="age"/>
+        <result property="sex" column="sex"/>
+        <result property="address" column="address"/>
+        <result property="role" column="role "/>
+        <collection property="bookList" javaType="ArrayList" ofType="com.example.demo.entity.Book">
+            <result column="b_id" property="id" />
+            <result column="b_name" property="name" />
+            <result column="b_price" property="price" />
+        </collection><!--collection实现的是一对多；property是User.java的属性名；ArrayList是bookList的数据类型；ofType表示得是list对应的对象是-->
+    </resultMap>
+
+    <select id="findPage" resultMap="userMap">
+        SELECT `user`.* ,book.id as b_id, book.name b_name,book.price b_price from `user`
+            left join book on user.id = book.user_id
+    </select>
+</mapper>

@@ -24,8 +24,12 @@ import java.util.List;
 public class FileController {
     @Value("${server.port}")//获取项目的端口号
     private String port;
+    @Value("192.168.43.31")
+    private String ip;
 
-    private static final String ip="http://localhost";//获取项目的IP
+
+
+//    private static final String ip="http://localhost";//获取项目的IP
 
     @PostMapping("/upload")
     public Result<?> upload(MultipartFile file) throws IOException {
@@ -37,7 +41,7 @@ public class FileController {
             rootFile.getParentFile().mkdirs();
         }
         FileUtil.writeBytes(file.getBytes(),rootFilePath);//写入到上传的路径
-        return Result.success( ip + ":" + port + "/files/" + flag);  // 返回结果 url
+        return Result.success( "http://"+ip + ":" + port + "/files/" + flag);  // 返回结果 url
 
     }
     @GetMapping("/{flag}")
@@ -71,7 +75,7 @@ public class FileController {
             rootFile.getParentFile().mkdirs();
         }
         FileUtil.writeBytes(file.getBytes(), rootFilePath);  // 把文件写入到上传的路径
-        String url = ip + ":" + port + "/files/" + flag;
+        String url = "http://"+ip + ":" + port + "/files/" + flag;
         JSONObject json = new JSONObject();
         json.set("errno", 0);
         JSONArray arr = new JSONArray();

@@ -1,5 +1,6 @@
 <template>
   <div style="padding: 10px;">
+    <Echart></Echart>
     <!--    功能区域-->
     <div style="margin: 10px 0">
       <el-button type="primary" @click="add">{{CQS}}</el-button><!--@click="add"表示点击这个按钮就触发add的函数-->
@@ -19,14 +20,9 @@
         <el-table-column prop="age" label="年龄" />
         <el-table-column prop="sex" label="性别" />
         <el-table-column prop="address" label="地址" />
-        <el-table-column  label="角色" >
-          <template #default="scope">
-            <span v-if="scope.row.role === 1 ">管理员</span>
-            <span v-if="scope.row.role === 2 ">普通用户</span>
-          </template>
-        </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
+            <el-button size="mini" type="success" plain @click="showBooks(scope.row.bookList)">查看图书列表</el-button>
             <el-button size="small" @click="handleEdit(scope.row)"
             >编辑</el-button
             >
@@ -60,6 +56,14 @@
             @current-change="handleCurrentChange"
             两个函数
             -->
+        <el-dialog title="用户拥有的图书列表" v-model="bookVis" width="30%">
+          <el-table :data="bookList" stripe border>
+            <el-table-column prop="id" label="ID"></el-table-column>
+            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column prop="price" label="价格"></el-table-column>
+          </el-table>
+        </el-dialog>
+
         <el-dialog
             v-model="dialogVisible"
             title="提示"
@@ -104,11 +108,11 @@
 <script>
 
 import request from "@/utils/request";
-
+import Echart from "@/components/Echart";
 export default {
   name: 'User',
   components: {
-
+      Echart
   },
   data(){
     return{
@@ -121,13 +125,19 @@ export default {
       CQS:'新增',
       tableData:[
 
-      ]
+      ],
+      bookList:[],
+      bookVis:false
     }
   },
   created() {
 this.load()
   },
   methods:{
+    showBooks(books) {
+      this.bookList = books
+      this.bookVis = true
+    },
     handleEdit(row){//编辑数据
      this.form=JSON.parse(JSON.stringify(row))//对数据进行深拷贝与其他form对象隔开
       this.dialogVisible=true//打开弹窗
@@ -179,6 +189,7 @@ this.load()
         console.log(res)
         this.tableData=res.data.records
         this.total=res.data.total
+        sessionStorage.setItem("users", JSON.stringify(res.data))  // 缓存用户信息
       })
     },
     handleDelete(id){

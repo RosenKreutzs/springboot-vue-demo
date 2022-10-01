@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.sql.Wrapper;
+import java.util.List;
 
 //@RestController的意思是表示自己为返回json的控制器
 @RestController
@@ -50,5 +51,10 @@ public class BookController {
         //Wrappers.<User>lambdaQuery().like(User::getNickName,search)//sql执行对象
         // User::getNickName是User.getNickName的变形
         return Result.success(bookPage);//Result.success(变量名)//用返回变量
+    }
+    @PostMapping("/deleteBatch")
+    public Result<?> deleteBatch(@RequestBody List<Integer> ids) {
+        bookMapper.deleteBatchIds(ids);
+        return Result.success();
     }
 }

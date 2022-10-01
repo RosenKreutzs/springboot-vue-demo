@@ -74,7 +74,7 @@ public class UserController {
         if (StrUtil.isNotBlank(search)){//StrUtil.isNotBlank(search)是hutool依赖用来帮助判断参数是否为空的
             wrapper.like(User::getNickName,search);
         }
-        Page<User> userPage= userMapper.selectPage(new Page<>(pageNum,pageSize), wrapper);
+        Page<User> userPage= userMapper.findPage(new Page<>(pageNum,pageSize));
         //selectPage需要Page对象和sql执行对象
         //new Page<>(pageNum,pageSize)//分页对象
         //Wrappers.<User>lambdaQuery().like(User::getNickName,search)//sql执行对象

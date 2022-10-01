@@ -11,4 +11,5 @@ import "@/assets/css/global.css"/* 全局引入global样式 */
 
 
 
+
 const app=createApp(App).use(store).use(router).use(ElementPlus ,{locale: zhCn,size:'small'}).mount('#app')
